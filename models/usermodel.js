@@ -5,7 +5,7 @@ const userSchema = new Schema({
         type:String,
         required:true,
     },
-    emailId:{
+    email:{
         type:String,
         required:true,
         unique: true,
@@ -18,7 +18,7 @@ const userSchema = new Schema({
     userRole:{
         type:String,
         required:true,
-        enum:['Admin','Resident','Maintainance'],
+        enum:['admin','resident','maintainance'],
     },
     password:{
         type:String,

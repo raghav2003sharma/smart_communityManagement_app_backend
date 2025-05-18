@@ -1,6 +1,8 @@
 import User from "../models/usermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import passport from "passport";
+
 
 
 const signUp = async (req, res)=>{// user sign up
@@ -15,17 +17,19 @@ const signUp = async (req, res)=>{// user sign up
         if(user){
             return res.status(409).json({message:"user already exists, try logging in !",success:false})
         }
-       const hash = await bcrypt.hash(password,saltRounds);     
-        const result = await User.create(
+       const hash = await bcrypt.hash(password,saltRounds);  //hashing the password   
+        const newUser = await User.create(
             {
-                emailId:email,fullName:fullname,userRole:userRole,password:hash
+                email:email,fullName:fullname,userRole:userRole,password:hash
             }
         )
+        console.log("New user created:", newUser);
    
-    res.status(201).json({message:"signup successful",success:true})
+    res.status(201).json({message:"signup successful",data:{  name: newUser.name,
+        email: newUser.email,},success:true})
 
     }catch(err){
-        console.log(err);
+        console.log(err.message);
         res.status(500).json({message:"signup failed,internal server error",success:false})
     }
 }
@@ -33,11 +37,12 @@ const signUp = async (req, res)=>{// user sign up
 const logIn = async(req,res)=>{//user login authentication
     try{
         const {email,password} = req.body;
+       
         if (!email || !password) {
             return res.status(400).json({ message: "All fields are required", success: false });
         }
 
-        const user = await User.findOne({ emailId:email })//check if user exists;
+        const user = await User.findOne({ email:email })//check if user exists;
         if(!user){
             return res.status(403).json({message:"user dont exist, signup first !",success:false})
         }
@@ -45,20 +50,24 @@ const logIn = async(req,res)=>{//user login authentication
               if(!result){
                 return res.status(403).json({message:"password incorrect",success:false})
               }
-       
-        const jwtToken =  jwt.sign({
-            email:user.emailId, _id:user._id
-        },process.env.JWT_SECRET,{expiresIn:'24h'});
-
-        res.status(200).json({
+        const jwtToken =  jwt.sign({//sign the jwt token
+                email:user.email, userRole:user.userRole
+            },process.env.JWT_SECRET,{expiresIn:'24h'});
+        const options ={
+            httpOnly:true,
+            secure:true,
+             path: '/', // make available to all routes
+        }
+    
+       return res.status(200).cookie('jwtToken', jwtToken,options).json({
             message:"signin successful",
             success:true,
             jwtToken
-
         })
     }catch(err){
         console.log(err);
     }
 }
+
 
 export {signUp,logIn}
