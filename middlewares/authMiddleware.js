@@ -16,17 +16,16 @@ import jwt from "jsonwebtoken";
       console.log(err);
     }
 }
-const authorizeRole = (requiredRoles) => {
+const authorizeRole = (requiredRole) => {
     return (req, res, next) => {
-      const userRoles = req.user.roles;
+      const userRole = req.user.userRole;
       
       // Check if user has any of the required roles
-      const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
+      const hasRequiredRole = requiredRole === userRole;
       
       if (!hasRequiredRole) {
         return res.status(403).send('Access denied');
       }
-      
       next();
     };
   };

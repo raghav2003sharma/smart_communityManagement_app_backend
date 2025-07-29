@@ -3,10 +3,10 @@ import express from "express";
 import { authorizeRole } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
-router.post("/create",authorizeRole,createEvent);
+router.post("/create",authorizeRole("admin"),createEvent);
 router.get("/find",findAllEvents);
 router.get("/find/:id",findEventById);
 router.put("/update/:id",updateEvent);
-router.delete("/delete/:id",deleteEvent);
+router.delete("/delete/:id",authorizeRole("admin"),deleteEvent);
 
 export default router;

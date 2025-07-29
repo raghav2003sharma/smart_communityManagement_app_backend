@@ -20,7 +20,10 @@ const billSchema = new Schema({
         type: Date,
         required: true
     },
-
+    displayId:{
+        type: String,
+        unique: true
+    }
 },{timestamps:true});
 
 export default model('bill',billSchema);

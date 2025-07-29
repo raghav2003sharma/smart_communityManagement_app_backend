@@ -21,7 +21,6 @@ const createEvent = async (req, res) => {
 const findAllEvents = async (req, res) => {
     try{
         const events = await Event.find();
-        console.log(events);
         res.status(200).json({message:"All events fetched",data:events,success:true})
     }catch(err){
         console.log(err.message);
@@ -49,7 +48,8 @@ const updateEvent = async (req, res) => {
 }
 const deleteEvent = async (req, res) => {
     try{
-        const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+        const {id} = req.params;
+        const deletedEvent = await Event.findByIdAndDelete(id);
         res.status(200).json({message:"event deleted",data:deletedEvent,success:true})
     }
     catch(err){

@@ -16,8 +16,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 const corsOptions = {
     origin: process.env.CORS_ORIGIN,
-    credentials: true, // This is the key part for Access-Control-Allow-Credentials
-    methods: 'GET,HEAD,OPTIONS,POST,PUT',
+    credentials: true, //  Access-Control-Allow-Credentials
+    methods: 'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE',
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
    
 }
@@ -34,10 +34,6 @@ app.use("/auth",authRoute); //user authentication routes
 //protected routes
 app.use("/bill",authUser,billRoute);//bill routes
 app.use("/event",authUser,eventRoute);//event routes
-
-
-
-
 
 app.listen(port ,()=>{
     console.log(`server is listening on port ${port}`);

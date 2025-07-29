@@ -1,7 +1,7 @@
 import User from "../models/usermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import passport from "passport";
+
 
 
 
@@ -51,7 +51,7 @@ const logIn = async(req,res)=>{//user login authentication
                 return res.status(403).json({message:"password incorrect",success:false})
               }
         const jwtToken =  jwt.sign({//sign the jwt token
-                email:user.email, userRole:user.userRole
+                email:user.email, userRole:user.userRole,id:user._id
             },process.env.JWT_SECRET,{expiresIn:'24h'});
         const options ={
             httpOnly:true,
